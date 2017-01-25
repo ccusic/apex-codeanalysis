@@ -124,11 +124,10 @@
 	              <goal>wsimport</goal>
 	            </goals>
 		        <configuration>
-		        	<bindingDirectory>bindings</bindingDirectory>
-		        	<wsdlDirectory>resources/wsdl</wsdlDirectory>
-		        	<!-- <bindingDirectory>${project.basedir}/src/main/webapp/bindings</bindingDirectory>
+		        	<bindingDirectory>${project.basedir}/src/main/webapp/bindings</bindingDirectory>
 		        	<wsdlDirectory>${project.basedir}/src/main/webapp/resources/wsdl</wsdlDirectory>
-		        	<wsdlLocation>classpath:wsdl/toolingapi.wsdl</wsdlLocation> -->
+		        	<!-- <wsdlLocation>classpath:wsdl/toolingapi.wsdl</wsdlLocation> -->
+		        	<wsdlLocation>https://apex-codeanalysis.herokuapp.com/resources/wsdl/toolingapi.wsdl</wsdlLocation>
 		        	<xadditionalHeaders>true</xadditionalHeaders>
 		        	<xdebug>true</xdebug>
 		        </configuration>
