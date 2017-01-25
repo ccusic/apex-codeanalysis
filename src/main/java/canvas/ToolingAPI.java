@@ -49,17 +49,23 @@ public class ToolingAPI {
 		String oAuthToken = request.getClient().getOAuthToken();
 		System.out.println("oAuthToken: " + oAuthToken);
 		System.out.println(
-			"UserContext - userId: " + request.userId + " - userName: " + request.canvasContext.userContext.userName);
+			"UserContext - userId: " + request.getUserId() + " - userName: " + request
+				.getContext().getUserContext().getUserName());
 		System.out.println(
-			"OrgContext - orgName: " + request.canvasContext.orgContext.name + " - orgId: " + request.canvasContext.orgContext.organizationId);
+			"OrgContext - orgName: " + request.getContext().getOrganizationContext()
+				.getName() + " - orgId: " + request.getContext().getOrganizationContext()
+					.getOrganizationId());
 		System.out.println(
-			"LinkContext - SObjectURL: " + request.canvasContext.linkContext.sobjectUrl + " - metadata url: " + request.canvasContext.linkContext.metadataUrl);
+			"LinkContext - SObjectURL: " + request.getContext().getLinkContext()
+				.getSobjectUrl() + " - metadata url: " + request.getContext().getLinkContext()
+					.getMetadataUrl());
 		System.out.println(
-			"LinkContext - SObjectURL: " + request.canvasContext.linkContext.sobjectUrl + " - metadata url: " + request.canvasContext.linkContext.metadataUrl);
+			"EnvContext - locationUrl(): " + request.getContext().getEnvironmentContext()
+				.getLocationUrl() + " - System Version: " + request.getContext()
+					.getEnvironmentContext().getSystemVersion());
 		System.out.println(
-			"EnvContext - locationUrl: " + request.canvasContext.envContext.locationUrl + " - System Version: " + request.canvasContext.envContext.version);
-		System.out.println(
-			"CanvasClient - instanceUrl: " + request.client.instanceUrl + " - Target Origin: " + request.client.targetOrigin);
+			"CanvasClient - instanceUrl(): " + request.getClient()
+				.getInstanceUrl() + " - Target Origin: " + request.getClient().getTargetOrigin());
 		// Connect to Tooling API
 		SforceServiceService service = new SforceServiceService();
 		SforceServicePortType port = service.getSforceService();
