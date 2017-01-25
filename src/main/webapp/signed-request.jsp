@@ -39,6 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
         <script type="text/javascript" src="/scripts/chatter-talk.js"></script>
 
         <script>
+        	alert('In signed-request with url: ' + window.location.href);
             if (self === top) {
                 // Not in Iframe
                 alert("This canvas app must be included within an iframe");

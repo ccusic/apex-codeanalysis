@@ -41,6 +41,7 @@ POSSIBILITY OF SUCH DAMAGE.
     	String signedRequestJson = SignedRequest.verifyAndDecodeAsJson(signedRequest[0], yourConsumerSecret);
     	ToolingAPI.fetchMetadata(signedRequest[0], yourConsumerSecret);
     %>
+    	On canvas.jsp about to go to signed-request
     	<script>
 			var sr;
 	        Sfdc.canvas(function() {
@@ -49,7 +50,9 @@ POSSIBILITY OF SUCH DAMAGE.
 	            //Sfdc.canvas.byId('lastname').innerHTML = sr.context.user.lastName;
 	            //Sfdc.canvas.byId('company').innerHTML = sr.context.organization.name;
 	        });
-    		window.location.href = '../signed-request.jsp?sr=' + sr;
+	        alert("about to forward to signed-request page!");
+    		window.location.replace = '../signed-request.jsp?sr=' + sr;
+    		return false;
     	</script>
     	<%-- <jsp:forward page="signed-request.jsp"/> --%><%
     }
