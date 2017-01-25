@@ -87,7 +87,8 @@ public class ToolingAPI {
 		// Create new MetadataContainer
 		MetadataContainer container = new MetadataContainer();
 		container.setName("UnusedApexMethods");
-		List<SaveResult> saveResults = port.create(new ArrayList<SObject>(Arrays.asList(container)), sessionHeader);
+		saveResults = port.create(new ArrayList<SObject>(Arrays.asList(container)), sessionHeader);
+		System.out.println("port: " + port + " - saveResults: " + saveResults);
 	}
 
 	public static String getUnusedApexMethods(String input, String secret) {
@@ -122,6 +123,7 @@ public class ToolingAPI {
 		 * container.setName("UnusedApexMethods"); List<SaveResult> saveResults = port.create(new
 		 * ArrayList<SObject>(Arrays.asList(container)), sessionHeader);
 		 */
+		System.out.println("port: " + port + " - saveResults: " + saveResults);
 		String containerId = saveResults.get(0).getId();
 
 		// Create ApexClassMember's and associate them with the MetadataContainer
