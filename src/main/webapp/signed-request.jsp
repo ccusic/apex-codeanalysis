@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
         This App must be invoked via a signed request!<%
         return;
     }
+	System.out.println("signedRequest: " + signedRequest);
     String yourConsumerSecret=System.getenv("CANVAS_CONSUMER_SECRET");
     String signedRequestJson = SignedRequest.verifyAndDecodeAsJson(signedRequest[0], yourConsumerSecret);
 %>

@@ -71,12 +71,12 @@ public class ToolingAPI {
 		SforceServicePortType port = service.getSforceService();
 		SessionHeader sessionHeader = new SessionHeader();
 		sessionHeader.setSessionId(oAuthToken);
-		System.out.println("sessionHeader: " + sessionHeader);
 		// Query visible Apex classes (this query does not support querying in packaging orgs)
 		ApexClass[] apexClasses = port
 			.query("select Id, Name, Body from ApexClass where NamespacePrefix = null",
 				sessionHeader)
 			.getRecords().toArray(new ApexClass[0]);
+		System.out.println("apexClasses: " + Arrays.toString(apexClasses));
 
 		// Delete existing MetadataContainer?
 		MetadataContainer[] containers = port
@@ -168,10 +168,12 @@ public class ToolingAPI {
 
 		// List declaredMethods with no external references
 		TreeSet<String> unusedMethods = new TreeSet<String>();
-		for(String delcaredMethodName: declaredMethods)
-			if(!methodReferences.contains(delcaredMethodName))
+		for(String delcaredMethodName: declaredMethods) {
+			if(!methodReferences.contains(delcaredMethodName)) {
+				System.out.println("unusedMethod: " + delcaredMethodName);
 				unusedMethods.add(delcaredMethodName);
-
+			}
+		}
 		// Render HTML table to display results
 		StringBuilder sb = new StringBuilder();
 		sb.append("<table>");
