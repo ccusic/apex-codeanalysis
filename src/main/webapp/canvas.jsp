@@ -25,42 +25,14 @@ POSSIBILITY OF SUCH DAMAGE.
 --%>
 
 <%@ page import="java.util.Map" %>
-<%@ page import="canvas.SignedRequest" %>
-<%@ page import="canvas.ToolingAPI" %>
 <%
-	
     // Pull the signed request out of the request body.
     Map<String, String[]> parameters = request.getParameterMap();
     String[] signedRequest = parameters.get("signed_request");
     if ("GET".equals(request.getMethod()) || signedRequest == null) {%>
     <jsp:forward page="welcome.jsp"/><%
     }
-    else {
-    	//Load the metadata
-    	String yourConsumerSecret=System.getenv("CANVAS_CONSUMER_SECRET");
-    	String signedRequestJson = SignedRequest.verifyAndDecodeAsJson(signedRequest[0], yourConsumerSecret);
-    	ToolingAPI.fetchMetadata(signedRequest[0], yourConsumerSecret);
-    %>
-    	On canvas.jsp about to go to signed-request.... 
-    	<script>
-        	document.getElementById('requestLink').disabled = true;
-			var sr;
-	        Sfdc.canvas(function() {
-	            sr = JSON.parse('<%=signedRequestJson%>');
-	            ToolingAPI.firstName = sr.context.user.firstName;
-	            ToolingAPI.lastName = sr.context.user.lastName;
-	            ToolingAPI.org = sr.context.user.lastName;
-	            //Sfdc.canvas.byId('firstname').innerHTML = sr.context.user.firstName;
-	            //Sfdc.canvas.byId('lastname').innerHTML = sr.context.user.lastName;
-	            //Sfdc.canvas.byId('company').innerHTML = sr.context.organization.name;
-	        });
-	        alert("about to forward to signed-request page!");
-	        console.log("about to forward to signed-request page!");
-	        document.getElementById('requestLink').disabled = false;
-    		//window.location.replace = '../signed-request.jsp?sr=' + sr;
-    		//return false;
-    	</script>
-    	<a href="https://apex-codeanalysis.herokuapp.com/signed-request.jsp" id="requestLink">Click Here when ready</a>
-    	<%-- <jsp:forward page="signed-request.jsp"/> --%><%
+    else {%>
+    <jsp:forward page="signed-request.jsp"/><%
     }
 %>

@@ -27,6 +27,17 @@ POSSIBILITY OF SUCH DAMAGE.
 <%@ page import="canvas.SignedRequest" %>
 <%@ page import="canvas.ToolingAPI" %>
 <%@ page import="java.util.Map" %>
+<%
+    // Pull the signed request out of the request body and verify/decode it.
+    Map<String, String[]> parameters = request.getParameterMap();
+    String[] signedRequest = parameters.get("signed_request");
+    if (signedRequest == null) {%>
+        This App must be invoked via a signed request!<%
+        return;
+    }
+    String yourConsumerSecret=System.getenv("CANVAS_CONSUMER_SECRET");
+    String signedRequestJson = SignedRequest.verifyAndDecodeAsJson(signedRequest[0], yourConsumerSecret);
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -39,11 +50,18 @@ POSSIBILITY OF SUCH DAMAGE.
         <script type="text/javascript" src="/scripts/chatter-talk.js"></script>
 
         <script>
-        	alert('In signed-request with url: ' + window.location.href);
             if (self === top) {
                 // Not in Iframe
                 alert("This canvas app must be included within an iframe");
             }
+
+            Sfdc.canvas(function() {
+                var sr = JSON.parse('<%=signedRequestJson%>');
+                Sfdc.canvas.byId('firstname').innerHTML = sr.context.user.firstName;
+                Sfdc.canvas.byId('lastname').innerHTML = sr.context.user.lastName;
+                Sfdc.canvas.byId('company').innerHTML = sr.context.organization.name;
+            });
+
         </script>
     </head>
     <body>
@@ -61,7 +79,7 @@ POSSIBILITY OF SUCH DAMAGE.
                     <table border="0" width="100%">
                         <tr>
                             <td><b>Unused Methods: </b></td>
-                            <td><span><%=ToolingAPI.getUnusedApexMethods()%></span></td>
+                            <td><span><%=ToolingAPI.getUnusedApexMethods(signedRequest[0], yourConsumerSecret)%></span></td>
                         </tr>
                         <tr>
                         	<td></td>

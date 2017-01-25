@@ -42,94 +42,32 @@ import com.sforce.soap.tooling.*;
  * @author afawcett
  */
 public class ToolingAPI {
-	public static List<SaveResult> saveResults;
-	public static ApexClass[] apexClasses;
-	public static MetadataContainer[] containers;
-	public static SforceServicePortType port;
-	public static SessionHeader sessionHeader;
-	public static String firstName;
-	public static String lastName;
-	public static String org;
 
-	public static void fetchMetadata(String input, String secret) {
+	public static String getUnusedApexMethods(String input, String secret) {
 		// Get oAuth token
 		CanvasRequest request = SignedRequest.verifyAndDecode(input, secret);
-		System.out.println("signed_request input: " + input);
 		String oAuthToken = request.getClient().getOAuthToken();
-		System.out.println("oAuthToken: " + oAuthToken);
-		System.out.println(
-			"UserContext - userId: " + request.getUserId() + " - userName: " + request.getContext().getUserContext().getUserName());
-		System.out.println(
-			"OrgContext - orgName: " + request.getContext().getOrganizationContext().getName() + " - orgId: " + request.getContext().getOrganizationContext()
-				.getOrganizationId());
-		System.out.println(
-			"LinkContext - SObjectURL: " + request.getContext().getLinkContext().getSobjectUrl() + " - metadata url: " + request.getContext().getLinkContext()
-				.getMetadataUrl());
-		System.out.println(
-			"EnvContext - locationUrl(): " + request.getContext().getEnvironmentContext().getLocationUrl() + " - System Version: " + request.getContext()
-				.getEnvironmentContext().getSystemVersion());
-		System.out.println(
-			"CanvasClient - instanceUrl(): " + request.getClient().getInstanceUrl() + " - Target Origin: " + request.getClient().getTargetOrigin());
+
 		// Connect to Tooling API
 		SforceServiceService service = new SforceServiceService();
-		port = service.getSforceService();
-		sessionHeader = new SessionHeader();
+		SforceServicePortType port = service.getSforceService();
+		SessionHeader sessionHeader = new SessionHeader();
 		sessionHeader.setSessionId(oAuthToken);
+
 		// Query visible Apex classes (this query does not support querying in packaging orgs)
-		apexClasses = port
-			.query("select Id, Name, Body from ApexClass where NamespacePrefix = null",
-				sessionHeader)
+		ApexClass[] apexClasses = port.query("select Id, Name, Body from ApexClass where NamespacePrefix = null", sessionHeader)
 			.getRecords().toArray(new ApexClass[0]);
-		System.out.println("apexClasses: " + Arrays.toString(apexClasses));
 
 		// Delete existing MetadataContainer?
-		containers = port
-			.query("select Id, Name from MetadataContainer where Name = 'UnusedApexMethods'", sessionHeader)
+		MetadataContainer[] containers = port.query("select Id, Name from MetadataContainer where Name = 'UnusedApexMethods'", sessionHeader)
 			.getRecords().toArray(new MetadataContainer[0]);
-		if(containers.length > 0) port.delete(Arrays.asList(containers[0].getId()), sessionHeader);
+		if(containers.length > 0)
+			port.delete(Arrays.asList(containers[0].getId()), sessionHeader);
 
 		// Create new MetadataContainer
 		MetadataContainer container = new MetadataContainer();
 		container.setName("UnusedApexMethods");
-		saveResults = port.create(new ArrayList<SObject>(Arrays.asList(container)), sessionHeader);
-		System.out.println("port: " + port + " - saveResults: " + saveResults);
-	}
-
-	public static String getUnusedApexMethods() {
-		/*
-		 * // Get oAuth token CanvasRequest request = SignedRequest.verifyAndDecode(input, secret);
-		 * String oAuthToken = request.getClient().getOAuthToken();
-		 * System.out.println("oAuthToken: " + oAuthToken); System.out.println(
-		 * "UserContext - userId: " + request.getUserId() + " - userName: " +
-		 * request.getContext().getUserContext().getUserName()); System.out.println(
-		 * "OrgContext - orgName: " + request.getContext().getOrganizationContext().getName() +
-		 * " - orgId: " + request.getContext().getOrganizationContext().getOrganizationId());
-		 * System.out.println( "LinkContext - SObjectURL: " +
-		 * request.getContext().getLinkContext().getSobjectUrl() + " - metadata url: " +
-		 * request.getContext().getLinkContext().getMetadataUrl()); System.out.println(
-		 * "EnvContext - locationUrl(): " +
-		 * request.getContext().getEnvironmentContext().getLocationUrl() + " - System Version: " +
-		 * request.getContext().getEnvironmentContext().getSystemVersion()); System.out.println(
-		 * "CanvasClient - instanceUrl(): " + request.getClient().getInstanceUrl() +
-		 * " - Target Origin: " + request.getClient().getTargetOrigin()); // Connect to Tooling API
-		 * SforceServiceService service = new SforceServiceService(); SforceServicePortType port =
-		 * service.getSforceService(); SessionHeader sessionHeader = new SessionHeader();
-		 * sessionHeader.setSessionId(oAuthToken); // Query visible Apex classes (this query does
-		 * not support querying in packaging orgs) ApexClass[] apexClasses = port
-		 * .query("select Id, Name, Body from ApexClass where NamespacePrefix = null",
-		 * sessionHeader) .getRecords().toArray(new ApexClass[0]);
-		 * System.out.println("apexClasses: " + Arrays.toString(apexClasses)); // Delete existing
-		 * MetadataContainer? MetadataContainer[] containers = port
-		 * .query("select Id, Name from MetadataContainer where Name = 'UnusedApexMethods'",
-		 * sessionHeader) .getRecords().toArray(new MetadataContainer[0]); if(containers.length > 0)
-		 * port.delete(Arrays.asList(containers[0].getId()), sessionHeader); // Create new
-		 * MetadataContainer MetadataContainer container = new MetadataContainer();
-		 * container.setName("UnusedApexMethods"); List<SaveResult> saveResults = port.create(new
-		 * ArrayList<SObject>(Arrays.asList(container)), sessionHeader);
-		 */
-
-		System.out.println("firstName: " + firstName + " - lastName: " + lastName + " - org: " + org);
-		System.out.println("port: " + port + " - saveResults: " + saveResults);
+		List<SaveResult> saveResults = port.create(new ArrayList<SObject>(Arrays.asList(container)), sessionHeader);
 		String containerId = saveResults.get(0).getId();
 
 		// Create ApexClassMember's and associate them with the MetadataContainer
@@ -151,24 +89,22 @@ public class ToolingAPI {
 		ContainerAsyncRequest ayncRequest = new ContainerAsyncRequest();
 		ayncRequest.setMetadataContainerId(containerId);
 		ayncRequest.setIsCheckOnly(true);
-		saveResults = port.create(new ArrayList<SObject>(Arrays.asList(ayncRequest)),
-			sessionHeader);
+		saveResults = port.create(new ArrayList<SObject>(Arrays.asList(ayncRequest)), sessionHeader);
 		String containerAsyncRequestId = saveResults.get(0).getId();
-		ayncRequest = (ContainerAsyncRequest) port.retrieve("State", "ContainerAsyncRequest",
-			Arrays.asList(containerAsyncRequestId), sessionHeader).get(0);
+		ayncRequest = (ContainerAsyncRequest) port.retrieve("State", "ContainerAsyncRequest", Arrays.asList(containerAsyncRequestId), sessionHeader).get(0);
 		while(ayncRequest.getState().equals("Queued")) {
 			try {
 				Thread.sleep(1 * 1000); // Wait for a second
 			} catch(InterruptedException ex) {
 				Thread.currentThread().interrupt();
 			}
-			ayncRequest = (ContainerAsyncRequest) port.retrieve("State", "ContainerAsyncRequest",
-				Arrays.asList(containerAsyncRequestId), sessionHeader).get(0);
+			ayncRequest = (ContainerAsyncRequest) port.retrieve("State", "ContainerAsyncRequest", Arrays.asList(containerAsyncRequestId), sessionHeader).get(0);
 		}
 
 		// Query again the ApexClassMember's to retrieve the SymbolTable's
-		ApexClassMember[] apexClassMembersWithSymbols = port.retrieve("Body, ContentEntityId, SymbolTable", "ApexClassMember", apexClassMemberIds,
-			sessionHeader).toArray(new ApexClassMember[0]);
+		ApexClassMember[] apexClassMembersWithSymbols = port
+			.retrieve("Body, ContentEntityId, SymbolTable", "ApexClassMember", apexClassMemberIds, sessionHeader)
+			.toArray(new ApexClassMember[0]);
 
 		// Map declared methods and external method references from SymbolTable's
 		Set<String> declaredMethods = new HashSet<String>();
@@ -182,8 +118,7 @@ public class ToolingAPI {
 				// Annotations are not exposed currently, following attempts to detect test methods
 				// to avoid giving false positives
 				if(method.getName().toLowerCase().contains(
-					"test") && method.getVisibility() == SymbolVisibility.PRIVATE && (method
-						.getReferences() == null || method.getReferences().size() == 0))
+					"test") && method.getVisibility() == SymbolVisibility.PRIVATE && (method.getReferences() == null || method.getReferences().size() == 0))
 					continue;
 				// Skip Global methods as implicitly these are referenced
 				if(method.getVisibility() == SymbolVisibility.GLOBAL)
@@ -205,12 +140,10 @@ public class ToolingAPI {
 
 		// List declaredMethods with no external references
 		TreeSet<String> unusedMethods = new TreeSet<String>();
-		for(String delcaredMethodName: declaredMethods) {
-			if(!methodReferences.contains(delcaredMethodName)) {
-				System.out.println("unusedMethod: " + delcaredMethodName);
+		for(String delcaredMethodName: declaredMethods)
+			if(!methodReferences.contains(delcaredMethodName))
 				unusedMethods.add(delcaredMethodName);
-			}
-		}
+
 		// Render HTML table to display results
 		StringBuilder sb = new StringBuilder();
 		sb.append("<table>");
