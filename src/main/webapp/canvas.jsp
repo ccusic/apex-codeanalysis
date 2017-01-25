@@ -41,6 +41,9 @@ POSSIBILITY OF SUCH DAMAGE.
     	String signedRequestJson = SignedRequest.verifyAndDecodeAsJson(signedRequest[0], yourConsumerSecret);
     	ToolingAPI.fetchMetadata(signedRequest[0], yourConsumerSecret);
     %>
-    	<jsp:forward page="signed-request.jsp"/><%
+    	<script>
+    		window.location.href = '../signed-request.jsp';
+    	</script>
+    	<%-- <jsp:forward page="signed-request.jsp"/> --%><%
     }
 %>
