@@ -42,7 +42,7 @@ POSSIBILITY OF SUCH DAMAGE.
     	ToolingAPI.fetchMetadata(signedRequest[0], yourConsumerSecret);
     %>
     	<script>
-    		window.location.href = '../signed-request.jsp';
+    		window.location.href = '../signed-request.jsp?signed_request=<%parameters.get("signed_request");%>';
     	</script>
     	<%-- <jsp:forward page="signed-request.jsp"/> --%><%
     }
