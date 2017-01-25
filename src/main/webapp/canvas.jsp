@@ -41,8 +41,9 @@ POSSIBILITY OF SUCH DAMAGE.
     	String signedRequestJson = SignedRequest.verifyAndDecodeAsJson(signedRequest[0], yourConsumerSecret);
     	ToolingAPI.fetchMetadata(signedRequest[0], yourConsumerSecret);
     %>
-    	On canvas.jsp about to go to signed-request
+    	On canvas.jsp about to go to signed-request.... 
     	<script>
+        	document.getElementById('requestLink').disabled = true;
 			var sr;
 	        Sfdc.canvas(function() {
 	            sr = JSON.parse('<%=signedRequestJson%>');
@@ -51,9 +52,12 @@ POSSIBILITY OF SUCH DAMAGE.
 	            //Sfdc.canvas.byId('company').innerHTML = sr.context.organization.name;
 	        });
 	        alert("about to forward to signed-request page!");
-    		window.location.replace = '../signed-request.jsp?sr=' + sr;
-    		return false;
+	        console.log("about to forward to signed-request page!");
+	        document.getElementById('requestLink').disabled = false;
+    		//window.location.replace = '../signed-request.jsp?sr=' + sr;
+    		//return false;
     	</script>
+    	<a href="https://apex-codeanalysis.herokuapp.com/signed-request.jsp" id="requestLink">Click Here when ready</a>
     	<%-- <jsp:forward page="signed-request.jsp"/> --%><%
     }
 %>
