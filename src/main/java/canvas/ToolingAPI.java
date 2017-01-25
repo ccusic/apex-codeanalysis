@@ -48,7 +48,18 @@ public class ToolingAPI {
 		CanvasRequest request = SignedRequest.verifyAndDecode(input, secret);
 		String oAuthToken = request.getClient().getOAuthToken();
 		System.out.println("oAuthToken: " + oAuthToken);
-
+		System.out.println(
+			"UserContext - userId: " + request.userId + " - userName: " + request.canvasContext.userContext.userName);
+		System.out.println(
+			"OrgContext - orgName: " + request.canvasContext.orgContext.name + " - orgId: " + request.canvasContext.orgContext.organizationId);
+		System.out.println(
+			"LinkContext - SObjectURL: " + request.canvasContext.linkContext.sobjectUrl + " - metadata url: " + request.canvasContext.linkContext.metadataUrl);
+		System.out.println(
+			"LinkContext - SObjectURL: " + request.canvasContext.linkContext.sobjectUrl + " - metadata url: " + request.canvasContext.linkContext.metadataUrl);
+		System.out.println(
+			"EnvContext - locationUrl: " + request.canvasContext.envContext.locationUrl + " - System Version: " + request.canvasContext.envContext.version);
+		System.out.println(
+			"CanvasClient - instanceUrl: " + request.client.instanceUrl + " - Target Origin: " + request.client.targetOrigin);
 		// Connect to Tooling API
 		SforceServiceService service = new SforceServiceService();
 		SforceServicePortType port = service.getSforceService();
