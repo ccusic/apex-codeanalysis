@@ -26,13 +26,19 @@ POSSIBILITY OF SUCH DAMAGE.
 
 <%@ page import="java.util.Map" %>
 <%
+	
     // Pull the signed request out of the request body.
     Map<String, String[]> parameters = request.getParameterMap();
     String[] signedRequest = parameters.get("signed_request");
     if ("GET".equals(request.getMethod()) || signedRequest == null) {%>
     <jsp:forward page="welcome.jsp"/><%
     }
-    else {%>
+    else {
+    	//Load the metadata
+    	String yourConsumerSecret=System.getenv("CANVAS_CONSUMER_SECRET");
+    	String signedRequestJson = SignedRequest.verifyAndDecodeAsJson(signedRequest[0], yourConsumerSecret);
+    	ToolingAPI.fetchMetadata(signedRequest[0], yourConsumerSecret);
+    %>
     <jsp:forward page="signed-request.jsp"/><%
     }
 %>

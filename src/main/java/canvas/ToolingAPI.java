@@ -42,55 +42,86 @@ import com.sforce.soap.tooling.*;
  * @author afawcett
  */
 public class ToolingAPI {
+	public static List<SaveResult> saveResults;
+	public static ApexClass[] apexClasses;
+	public static MetadataContainer[] containers;
+	public static SforceServicePortType port;
+	public static SessionHeader sessionHeader;
 
-	public static String getUnusedApexMethods(String input, String secret) {
+	public static void fetchMetadata(String input, String secret) {
 		// Get oAuth token
 		CanvasRequest request = SignedRequest.verifyAndDecode(input, secret);
 		String oAuthToken = request.getClient().getOAuthToken();
 		System.out.println("oAuthToken: " + oAuthToken);
 		System.out.println(
-			"UserContext - userId: " + request.getUserId() + " - userName: " + request
-				.getContext().getUserContext().getUserName());
+			"UserContext - userId: " + request.getUserId() + " - userName: " + request.getContext().getUserContext().getUserName());
 		System.out.println(
-			"OrgContext - orgName: " + request.getContext().getOrganizationContext()
-				.getName() + " - orgId: " + request.getContext().getOrganizationContext()
-					.getOrganizationId());
+			"OrgContext - orgName: " + request.getContext().getOrganizationContext().getName() + " - orgId: " + request.getContext().getOrganizationContext()
+				.getOrganizationId());
 		System.out.println(
-			"LinkContext - SObjectURL: " + request.getContext().getLinkContext()
-				.getSobjectUrl() + " - metadata url: " + request.getContext().getLinkContext()
-					.getMetadataUrl());
+			"LinkContext - SObjectURL: " + request.getContext().getLinkContext().getSobjectUrl() + " - metadata url: " + request.getContext().getLinkContext()
+				.getMetadataUrl());
 		System.out.println(
-			"EnvContext - locationUrl(): " + request.getContext().getEnvironmentContext()
-				.getLocationUrl() + " - System Version: " + request.getContext()
-					.getEnvironmentContext().getSystemVersion());
+			"EnvContext - locationUrl(): " + request.getContext().getEnvironmentContext().getLocationUrl() + " - System Version: " + request.getContext()
+				.getEnvironmentContext().getSystemVersion());
 		System.out.println(
-			"CanvasClient - instanceUrl(): " + request.getClient()
-				.getInstanceUrl() + " - Target Origin: " + request.getClient().getTargetOrigin());
+			"CanvasClient - instanceUrl(): " + request.getClient().getInstanceUrl() + " - Target Origin: " + request.getClient().getTargetOrigin());
 		// Connect to Tooling API
 		SforceServiceService service = new SforceServiceService();
-		SforceServicePortType port = service.getSforceService();
-		SessionHeader sessionHeader = new SessionHeader();
+		port = service.getSforceService();
+		sessionHeader = new SessionHeader();
 		sessionHeader.setSessionId(oAuthToken);
 		// Query visible Apex classes (this query does not support querying in packaging orgs)
-		ApexClass[] apexClasses = port
+		apexClasses = port
 			.query("select Id, Name, Body from ApexClass where NamespacePrefix = null",
 				sessionHeader)
 			.getRecords().toArray(new ApexClass[0]);
 		System.out.println("apexClasses: " + Arrays.toString(apexClasses));
 
 		// Delete existing MetadataContainer?
-		MetadataContainer[] containers = port
-			.query("select Id, Name from MetadataContainer where Name = 'UnusedApexMethods'",
-				sessionHeader)
+		containers = port
+			.query("select Id, Name from MetadataContainer where Name = 'UnusedApexMethods'", sessionHeader)
 			.getRecords().toArray(new MetadataContainer[0]);
-		if(containers.length > 0)
-			port.delete(Arrays.asList(containers[0].getId()), sessionHeader);
+		if(containers.length > 0) port.delete(Arrays.asList(containers[0].getId()), sessionHeader);
 
 		// Create new MetadataContainer
 		MetadataContainer container = new MetadataContainer();
 		container.setName("UnusedApexMethods");
-		List<SaveResult> saveResults = port.create(new ArrayList<SObject>(Arrays.asList(container)),
-			sessionHeader);
+		List<SaveResult> saveResults = port.create(new ArrayList<SObject>(Arrays.asList(container)), sessionHeader);
+	}
+
+	public static String getUnusedApexMethods(String input, String secret) {
+		/*
+		 * // Get oAuth token CanvasRequest request = SignedRequest.verifyAndDecode(input, secret);
+		 * String oAuthToken = request.getClient().getOAuthToken();
+		 * System.out.println("oAuthToken: " + oAuthToken); System.out.println(
+		 * "UserContext - userId: " + request.getUserId() + " - userName: " +
+		 * request.getContext().getUserContext().getUserName()); System.out.println(
+		 * "OrgContext - orgName: " + request.getContext().getOrganizationContext().getName() +
+		 * " - orgId: " + request.getContext().getOrganizationContext().getOrganizationId());
+		 * System.out.println( "LinkContext - SObjectURL: " +
+		 * request.getContext().getLinkContext().getSobjectUrl() + " - metadata url: " +
+		 * request.getContext().getLinkContext().getMetadataUrl()); System.out.println(
+		 * "EnvContext - locationUrl(): " +
+		 * request.getContext().getEnvironmentContext().getLocationUrl() + " - System Version: " +
+		 * request.getContext().getEnvironmentContext().getSystemVersion()); System.out.println(
+		 * "CanvasClient - instanceUrl(): " + request.getClient().getInstanceUrl() +
+		 * " - Target Origin: " + request.getClient().getTargetOrigin()); // Connect to Tooling API
+		 * SforceServiceService service = new SforceServiceService(); SforceServicePortType port =
+		 * service.getSforceService(); SessionHeader sessionHeader = new SessionHeader();
+		 * sessionHeader.setSessionId(oAuthToken); // Query visible Apex classes (this query does
+		 * not support querying in packaging orgs) ApexClass[] apexClasses = port
+		 * .query("select Id, Name, Body from ApexClass where NamespacePrefix = null",
+		 * sessionHeader) .getRecords().toArray(new ApexClass[0]);
+		 * System.out.println("apexClasses: " + Arrays.toString(apexClasses)); // Delete existing
+		 * MetadataContainer? MetadataContainer[] containers = port
+		 * .query("select Id, Name from MetadataContainer where Name = 'UnusedApexMethods'",
+		 * sessionHeader) .getRecords().toArray(new MetadataContainer[0]); if(containers.length > 0)
+		 * port.delete(Arrays.asList(containers[0].getId()), sessionHeader); // Create new
+		 * MetadataContainer MetadataContainer container = new MetadataContainer();
+		 * container.setName("UnusedApexMethods"); List<SaveResult> saveResults = port.create(new
+		 * ArrayList<SObject>(Arrays.asList(container)), sessionHeader);
+		 */
 		String containerId = saveResults.get(0).getId();
 
 		// Create ApexClassMember's and associate them with the MetadataContainer
@@ -128,10 +159,8 @@ public class ToolingAPI {
 		}
 
 		// Query again the ApexClassMember's to retrieve the SymbolTable's
-		ApexClassMember[] apexClassMembersWithSymbols = port
-			.retrieve("Body, ContentEntityId, SymbolTable", "ApexClassMember", apexClassMemberIds,
-				sessionHeader)
-			.toArray(new ApexClassMember[0]);
+		ApexClassMember[] apexClassMembersWithSymbols = port.retrieve("Body, ContentEntityId, SymbolTable", "ApexClassMember", apexClassMemberIds,
+			sessionHeader).toArray(new ApexClassMember[0]);
 
 		// Map declared methods and external method references from SymbolTable's
 		Set<String> declaredMethods = new HashSet<String>();
