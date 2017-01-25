@@ -91,7 +91,7 @@ public class ToolingAPI {
 		System.out.println("port: " + port + " - saveResults: " + saveResults);
 	}
 
-	public static String getUnusedApexMethods(String input, String secret) {
+	public static String getUnusedApexMethods() {
 		/*
 		 * // Get oAuth token CanvasRequest request = SignedRequest.verifyAndDecode(input, secret);
 		 * String oAuthToken = request.getClient().getOAuthToken();

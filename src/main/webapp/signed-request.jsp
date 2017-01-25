@@ -27,18 +27,6 @@ POSSIBILITY OF SUCH DAMAGE.
 <%@ page import="canvas.SignedRequest" %>
 <%@ page import="canvas.ToolingAPI" %>
 <%@ page import="java.util.Map" %>
-<%
-    // Pull the signed request out of the request body and verify/decode it.
-    Map<String, String[]> parameters = request.getParameterMap();
-    String[] signedRequest = parameters.get("signed_request");
-    if (signedRequest == null) {%>
-        This App must be invoked via a signed request!<%
-        return;
-    }
-	System.out.println("signedRequest: " + signedRequest);
-    String yourConsumerSecret=System.getenv("CANVAS_CONSUMER_SECRET");
-    String signedRequestJson = SignedRequest.verifyAndDecodeAsJson(signedRequest[0], yourConsumerSecret);
-%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -80,7 +68,7 @@ POSSIBILITY OF SUCH DAMAGE.
                     <table border="0" width="100%">
                         <tr>
                             <td><b>Unused Methods: </b></td>
-                            <td><span><%=ToolingAPI.getUnusedApexMethods(signedRequest[0], yourConsumerSecret)%></span></td>
+                            <td><span><%=ToolingAPI.getUnusedApexMethods()%></span></td>
                         </tr>
                         <tr>
                         	<td></td>
