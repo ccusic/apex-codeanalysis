@@ -25,6 +25,8 @@ POSSIBILITY OF SUCH DAMAGE.
 --%>
 
 <%@ page import="java.util.Map" %>
+<%@ page import="canvas.SignedRequest" %>
+<%@ page import="canvas.ToolingAPI" %>
 <%
 	
     // Pull the signed request out of the request body.
@@ -39,6 +41,6 @@ POSSIBILITY OF SUCH DAMAGE.
     	String signedRequestJson = SignedRequest.verifyAndDecodeAsJson(signedRequest[0], yourConsumerSecret);
     	ToolingAPI.fetchMetadata(signedRequest[0], yourConsumerSecret);
     %>
-    <jsp:forward page="signed-request.jsp"/><%
+    	<jsp:forward page="signed-request.jsp"/><%
     }
 %>
