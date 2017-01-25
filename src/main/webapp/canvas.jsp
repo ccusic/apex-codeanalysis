@@ -42,7 +42,14 @@ POSSIBILITY OF SUCH DAMAGE.
     	ToolingAPI.fetchMetadata(signedRequest[0], yourConsumerSecret);
     %>
     	<script>
-    		window.location.href = '../signed-request.jsp?signed_request=<%parameters.get("signed_request");%>';
+			var sr;
+	        Sfdc.canvas(function() {
+	            sr = JSON.parse('<%=signedRequestJson%>');
+	            //Sfdc.canvas.byId('firstname').innerHTML = sr.context.user.firstName;
+	            //Sfdc.canvas.byId('lastname').innerHTML = sr.context.user.lastName;
+	            //Sfdc.canvas.byId('company').innerHTML = sr.context.organization.name;
+	        });
+    		window.location.href = '../signed-request.jsp?sr=' + sr;
     	</script>
     	<%-- <jsp:forward page="signed-request.jsp"/> --%><%
     }

@@ -47,10 +47,14 @@ public class ToolingAPI {
 	public static MetadataContainer[] containers;
 	public static SforceServicePortType port;
 	public static SessionHeader sessionHeader;
+	public static String firstName;
+	public static String lastName;
+	public static String org;
 
 	public static void fetchMetadata(String input, String secret) {
 		// Get oAuth token
 		CanvasRequest request = SignedRequest.verifyAndDecode(input, secret);
+		System.out.println("signed_request input: " + input);
 		String oAuthToken = request.getClient().getOAuthToken();
 		System.out.println("oAuthToken: " + oAuthToken);
 		System.out.println(
