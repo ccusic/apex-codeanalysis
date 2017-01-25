@@ -54,7 +54,7 @@ public class ToolingAPI {
 		SforceServicePortType port = service.getSforceService();
 		SessionHeader sessionHeader = new SessionHeader();
 		sessionHeader.setSessionId(oAuthToken);
-
+		System.out.println("sessionHeader: " + sessionHeader);
 		// Query visible Apex classes (this query does not support querying in packaging orgs)
 		ApexClass[] apexClasses = port
 			.query("select Id, Name, Body from ApexClass where NamespacePrefix = null",
