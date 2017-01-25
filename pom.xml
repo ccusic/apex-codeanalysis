@@ -124,10 +124,13 @@
 	              <goal>wsimport</goal>
 	            </goals>
 		        <configuration>
-		        	<bindingDirectory>${project.basedir}/src/bindings</bindingDirectory>
-		        	<wsdlDirectory>${project.basedir}/src/resources/wsdl</wsdlDirectory>
-		        	<wsdlLocation>classpath:wsdl/toolingapi.wsdl</wsdlLocation>
+		        	<bindingDirectory>${project.basedir}/src/main/webapp/bindings</bindingDirectory>
+		        	<wsdlDirectory>${project.basedir}/src/main/webapp/resources/wsdl</wsdlDirectory>
+		        	<!-- <bindingDirectory>${project.basedir}/src/main/webapp/bindings</bindingDirectory>
+		        	<wsdlDirectory>${project.basedir}/src/main/webapp/resources/wsdl</wsdlDirectory>
+		        	<wsdlLocation>classpath:wsdl/toolingapi.wsdl</wsdlLocation> -->
 		        	<xadditionalHeaders>true</xadditionalHeaders>
+		        	<xdebug>true</xdebug>
 		        </configuration>
 	          </execution>
 	        </executions>
