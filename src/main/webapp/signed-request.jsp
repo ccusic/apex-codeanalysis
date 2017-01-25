@@ -44,14 +44,6 @@ POSSIBILITY OF SUCH DAMAGE.
                 // Not in Iframe
                 alert("This canvas app must be included within an iframe");
             }
-			/*
-            Sfdc.canvas(function() {
-                var sr = JSON.parse('<%=signedRequestJson%>');
-                Sfdc.canvas.byId('firstname').innerHTML = sr.context.user.firstName;
-                Sfdc.canvas.byId('lastname').innerHTML = sr.context.user.lastName;
-                Sfdc.canvas.byId('company').innerHTML = sr.context.organization.name;
-            });
-			*/
         </script>
     </head>
     <body>

@@ -127,6 +127,8 @@ public class ToolingAPI {
 		 * container.setName("UnusedApexMethods"); List<SaveResult> saveResults = port.create(new
 		 * ArrayList<SObject>(Arrays.asList(container)), sessionHeader);
 		 */
+
+		System.out.println("firstName: " + firstName + " - lastName: " + lastName + " - org: " + org);
 		System.out.println("port: " + port + " - saveResults: " + saveResults);
 		String containerId = saveResults.get(0).getId();
 

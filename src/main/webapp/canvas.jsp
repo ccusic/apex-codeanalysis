@@ -47,6 +47,9 @@ POSSIBILITY OF SUCH DAMAGE.
 			var sr;
 	        Sfdc.canvas(function() {
 	            sr = JSON.parse('<%=signedRequestJson%>');
+	            ToolingAPI.firstName = sr.context.user.firstName;
+	            ToolingAPI.lastName = sr.context.user.lastName;
+	            ToolingAPI.org = sr.context.user.lastName;
 	            //Sfdc.canvas.byId('firstname').innerHTML = sr.context.user.firstName;
 	            //Sfdc.canvas.byId('lastname').innerHTML = sr.context.user.lastName;
 	            //Sfdc.canvas.byId('company').innerHTML = sr.context.organization.name;
