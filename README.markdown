@@ -1,6 +1,21 @@
 Apex Code Analysis Tool using Tooling API and Canvas
 ====================================================
 
+For a new deployment:
+1. Create a new connected app and grant access to System Admin profile
+  - Start URL: https://apex-codeanalysis.herokuapp.com/canvas.jsp
+  - Info URL: https://andyinthecloud.com/2013/02/02/spring-cleaning-apex-code-with-the-tooling-api/
+  - Callback URL: https://apex-codeanalysis.herokuapp.com/sdk/callback.html
+2. Get the Client Secret and Consumer Key
+3. Update app
+  - Update the .env file of the project to fix the Client Secret and Consumer Key
+  - Update the wsdl file URL to be the correct Sandbox URL
+4. Update the Heroku app > Settings > Reveal Config Vars
+5. Create new VF Page with <apex:canvasApp developerName="apex_codeanalysis" width="100%"/>
+6. Open the VF page and check the Heroku logs
+
+
+
 This tool utilises the new **Spring'13 Tooling API** and the **Canvas** technology to fill a gap in the Apex developers toolkit. That being the ability to perform analysis on the Apex code they are developing. This initial prototype shows how the SymbolTable information can be used to list unused Apex methods. More information and background to this can be found at my blog [here](http://andrewfawcett.wordpress.com/2013/02/02/spring13-clean-apex-code-with-the-tooling-api). For more information on how to run and deploy this sample, please refer to the [Force.com Canvas Developers Guide](http://www.salesforce.com/us/developer/docs/platform_connect/index.htm).
 
 ![Screenshot](http://andrewfawcett.files.wordpress.com/2013/02/apexanalysis.png)
